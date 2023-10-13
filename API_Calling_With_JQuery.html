@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Calling with JQuery</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!-- Spinner section start -->
+    <div class="d-flex justify-content-center a_myloader">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <!-- Spinner section end -->
+
+    <!--Button start tag-->
+    <button class="btn btn-success a_getauthor">Get Authorse</button>
+    <!--Button end tag-->
+
+    <script>
+      /* fetch the spinner class */
+      //document.querySelector(".a_myloader").classList.add("invisible");
+
+      var loader = document.querySelector(".a_myloader");
+      loader.classList.add("invisible");
+
+      document
+        .querySelector(".a_getauthor")
+        .addEventListener("click", function () {
+          /* if (loader.classList.contains("invisible")) {
+            console.log("true");
+            loader.classList.remove("invisible");
+            loader.classList.add("visible");
+          } else {
+            console.log("false");
+            loader.classList.remove("visible");
+            loader.classList.add("invisible");
+          } */
+          //alert("ok");
+          //object.method();
+          //$.method();
+          //$.ajax();
+          //Type=Request Type 1.Get 2.POST
+
+          //JQuery API Calling function
+          let po = new Promise(function (resolve, reject) {
+            //resolve and reject both
+            //Producing code (The code which may take time)
+            //resolve(); -> success
+            //reject(); -> Error
+            $.ajax({
+              //1.Propery:Value
+              //2.Function:Function()
+              url: "https://fakerestapi.azurewebsites.net/api/v1/Authors",
+              type: "GET",
+              success: function (result, status, xhr) {
+                console.log("Success block of JQuery ", result);
+                resolve(result);
+              },
+              error: function (xhr, status, error) {
+                reject(error);
+              },
+            });
+          });
+
+          //Consuming code
+
+          //PromiseObject.then().then().then().........catch();
+          po.then(function (data) {
+            //Here we just recived the data
+            //so we can remove the loader
+            loader.classList.remove("visible");
+            //success block
+            console.log("Consuming code form pormise object", data);
+
+            var tr = `<table class="table">
+                <thead>
+                          <tr>
+                                 <th scope="col">id</th>
+                                 <th scope="col">firstName</th>
+                                 <th scope="col">lastName</th>
+                                <th scope="col">idBook</th>
+                                <th scope="col">Action</th>
+                           </tr>
+                </thead>
+      <tbody>`;
+
+            data.forEach((element) => {
+              console.log(element);
+              tr +=
+                `<tr>
+                                <td>` +
+                element.id +
+                `</td>
+                                <td>` +
+                element.firstName +
+                `</td>
+                                <td>` +
+                element.lastName +
+                `</td>
+                                <td>` +
+                element.idBook +
+                `</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm">View</button>    
+                                    <button class="btn btn-info btn-sm">Edit</button>    
+                                    <button class="btn btn-danger btn-sm">Delete</button>    
+                                </td>
+                            </tr>`;
+            });
+            tr =
+              tr +
+              `
+            </tbody></table> 
+            `;
+            console.log(tr);
+            /* document.body.innerHTML+=L+tr; */
+            //Same Work
+            document.body.innerHTML = document.body.innerHTML + tr;
+          }).catch(function (error) {
+            //Error block
+          });
+        });
+      //$=jquery
+      //$ symbol is reference to jquery object
+      //$.ajax()
+
+      //JQuery with Promise
+
+      //Lets create a promise object
+
+      //Let classObject = new ClassName();
+      //promise object=po
+    </script>
+  </body>
+</html>
